@@ -1,0 +1,10 @@
+#grid-container {
+    display: grid;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+}
+
+.gridCell {
+    border: 1px solid black;
+}
