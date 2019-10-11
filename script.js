@@ -10,14 +10,27 @@
     8. Create function to Choose a Color
     9. Create function for Gradient Mode
     10. Create Mode for Erase
-    11. 
+    11. Create an initializer for page
 */
+init(16);
+function init(gridSize) {
+    console.log('init shit');
+    createGrid(gridSize);
+    mouseTrack('black');
+    document.getElementById('reset').addEventListener('click', clearGrid);
+    document.getElementById('resize').addEventListener('click', gridResize);
+    document.getElementById('black').addEventListener('click', backToBlack);
+    document.getElementById('random').addEventListener('click', randomPick);
+    document.getElementById('rainbow').addEventListener('click', rainbow);
+    //document.getElementById('color').addEventListener('click', gridSize);
+    //document.getElementById('shade').addEventListener('click', gridSize);
+    //document.getElementById('erase').addEventListener('click', gridSize);
 
+}
 //1. Creating a 16x16 grid in javascript
- let grid = document.getElementById('grid-container');
- let trigger = false;
+ //let grid = document.getElementById('grid-container');
  //3. Init with 16x16 grid
- createGrid(16);
+ //createGrid(16);
 // grid.style.gridTemplateColumns = 'repeat(16, 1fr)';
 // //For loop is cell^2 because max columns of number of cells. The rest flexes into the container
 // for (let i = 0; i < 16**2; i++) {
@@ -39,13 +52,14 @@
 
 //2. Write function to create any size grid
 function createGrid(gridSize) {
+    let grid = document.getElementById('grid-container');
     grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
     grid.style.border = '1 px solid black';
-    grid.style.rad
     for (let i = 0; i < gridSize**2; i++) {
-    const gridItems = document.createElement('div');
-    gridItems.classList.add('gridCell');
-    grid.appendChild(gridItems);
+        const gridItems = document.createElement('div');
+        gridItems.classList.add('gridCell');
+        gridItems.setAttribute('id', 'cell-' + i);
+        grid.appendChild(gridItems);
     }
 }
 
@@ -60,30 +74,124 @@ function createGrid(gridSize) {
         -onclick and mouse down - change color; else remove the event
     b. While the mouse is down and over the grid area, change the color
 */
-let cells = grid.querySelectorAll('.gridCell');
 
-function toggle() {
-    return;
-}
-
-function enableToggle() {
-    console.log('enableToggle');
-    trigger = true;
-}
-function disableToggle() {
-    console.log('disableToggle');
-    trigger = false;
-}
 //The following variables are sitting at the top.
 //let grid = document.getElementById('grid-container');
-//let trigger = false;
-function dragFunct() {
+//let mouseHold = false;
+function mouseTrack(color) {
+    let cells = document.querySelectorAll('.gridCell');
+    let mouseHold = false;
     cells.forEach((cell) => {
-        cell.addEventListener('mouseover', () => {
-            cell.style.backgroundColor = 'black';
-            console.log('hello');
+        //single click
+        cell.addEventListener('mousedown', function() {
+            cell.style.backgroundColor = color;
+            console.log('mouse is down');
+            mouseHold = true;
         });
-    })
+        //Drag portion -- UPDATE-- does not get the id of the last cell
+        cell.addEventListener('mouseover', function() {
+                if (mouseHold) {  
+                    console.log(cell.id);
+                    console.log('changing to this color ' + color);
+                    cell.style.backgroundColor = color;
+                }
+            });
+        cell.addEventListener('mouseup', function() {
+                mouseHold = false;
+                console.log('Mouse is up');
+                cell.removeEventListener('mouseover', function() {
+                    cell.style.backgroundColor = color;
+                });
+            });
+        //THIS PART DOESNT ALLOW THE DRAG TO FUNCTION PROPERLY BECAUSE WE ARE LEAVING EACH CELL
+        // cell.addEventListener('mouseleave', function() {
+        //     mouseHold = false;
+        //     cell.removeEventListener('mouseover', function() {
+        //         cell.style.backgroundColor = 'black';
+        //     });
+        // });
+        
+    });
 }
 
-dragFunct();
+//5. Create function to Reset grid.
+function clearGrid() {
+    let cells = document.querySelectorAll('.gridCell');
+    cells.forEach((cell) => {
+        cell.style.backgroundColor = 'white';
+    }
+)}
+
+//6. Create function to change grid size
+function gridResize() {
+    let cells = document.querySelectorAll('.gridCell');
+    cells.forEach((cell) => {
+        cell.remove();
+    })
+    init(parseInt(prompt('What size grid do you want?')));
+}
+
+
+//Black Brush Tip
+//Next steps to change it into Color choose
+function backToBlack() {
+    let cells = document.querySelectorAll('.gridCell');
+    let mouseHold = false;
+    cells.forEach((cell) => {
+        cell.addEventListener('mouseup', function() {
+            mouseHold = false;
+            console.log('Mouse is up');
+            cell.removeEventListener('mouseover', function() {
+                cell.style.backgroundColor = color;
+            });
+        });
+    });
+    mouseTrack('black');
+}
+
+
+//7. Create function for Random Colors
+function randomColor() {
+    return 'rgba(' + randomNum() + ', ' + randomNum() + ', ' + randomNum() + ', ' + Math.random().toFixed(1) + ')';
+}
+function randomNum() {
+    let num = Math.round(Math.random()*255);
+    return num;
+}
+//Random Color Picker
+function randomPick() {
+    mouseTrack(randomColor());
+}
+//Rainbow mode
+function rainbow() {
+    /*
+        Problem with this one is that, I can't change the color back to black and IDK WHY. Is there a better way to shorten this without having to copy the mousetrack code?????
+        Is it because I need to remove the event listeners???
+    */ 
+    let cells = document.querySelectorAll('.gridCell');
+    let mouseHold = false;
+    cells.forEach((cell) => {
+        //single click
+        cell.addEventListener('mousedown', function() {
+            cell.style.backgroundColor = randomColor();
+            console.log('mouse is down');
+            mouseHold = true;
+        });
+        //Drag portion -- UPDATE-- does not get the id of the last cell
+        cell.addEventListener('mouseover', function() {
+                if (mouseHold) {  
+                    console.log(cell.id);
+                    console.log('changing to this color ' + randomColor());
+                    cell.style.backgroundColor = randomColor();
+                }
+            });
+        cell.addEventListener('mouseup', function() {
+                mouseHold = false;
+                console.log('Mouse is up');
+                cell.removeEventListener('mouseover', function() {
+                    cell.style.backgroundColor = randomColor();
+                });
+            });      
+    });
+    
+}
