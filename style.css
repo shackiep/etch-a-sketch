@@ -3,8 +3,9 @@ body {
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     background: linear-gradient(135deg, rgb(204, 145, 253), rgb(169, 220, 250));
-    height: 100%;
-    width: 100%;
+    background-position: absolute;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     padding-bottom: 100px;
 }
 
