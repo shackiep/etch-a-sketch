@@ -3,14 +3,13 @@
     1. Create 16x16 grid for practice (CHECK)
     2. Write function to create any size grid (CHECK)
     3. Begin the page with a 16x16 grid (CHECK)
-    4. Create function onhover OR onmousedown to color grid
-    5. Create function to Reset grid.
-    6. Create function to change grid size
-    7. Create function for Random Color Mode
-    8. Create function to Choose a Color
-    9. Create function for Gradient Mode
-    10. Create Mode for Erase
-    11. Create an initializer for page
+    4. Create function onhover OR onmousedown to color grid (CHECK)
+    5. Create function to Reset grid. (CHECK)
+    6. Create function to change grid size (CHECK)
+    7. Create function for Random Color Mode and Rainbow(CHECK)
+    8. Create function to Choose a Color (CHECK)
+    9. Create Mode for Erase
+    10. Create an initializer for page (CHECK)
 */
 init(16);
 function init(gridSize) {
@@ -22,9 +21,7 @@ function init(gridSize) {
     document.getElementById('black').addEventListener('click', backToBlack);
     document.getElementById('random').addEventListener('click', randomPick);
     document.getElementById('rainbow').addEventListener('click', rainbow);
-    //document.getElementById('color').addEventListener('click', gridSize);
-    //document.getElementById('shade').addEventListener('click', gridSize);
-    //document.getElementById('erase').addEventListener('click', gridSize);
+    document.getElementById('erase').addEventListener('click', erase);
 
 }
 //1. Creating a 16x16 grid in javascript
@@ -118,6 +115,7 @@ function mouseTrack(color) {
 function clearGrid() {
     let cells = document.querySelectorAll('.gridCell');
     cells.forEach((cell) => {
+        cell.style.transition = `${Math.random() * 2}s`;
         cell.style.backgroundColor = 'white';
     }
 )}
@@ -135,17 +133,6 @@ function gridResize() {
 //Black Brush Tip
 //Next steps to change it into Color choose
 function backToBlack() {
-    let cells = document.querySelectorAll('.gridCell');
-    let mouseHold = false;
-    cells.forEach((cell) => {
-        cell.addEventListener('mouseup', function() {
-            mouseHold = false;
-            console.log('Mouse is up');
-            cell.removeEventListener('mouseover', function() {
-                cell.style.backgroundColor = color;
-            });
-        });
-    });
     mouseTrack('black');
 }
 
@@ -194,4 +181,25 @@ function rainbow() {
             });      
     });
     
+}
+
+//8. Create function to Choose a Color
+var colorBtn = document.querySelector('#color');
+var colorPicker = new Picker(colorBtn);
+colorPicker.onDone = function(color) {
+    console.log('rgba(' + color.rgba[0] + ', ' + color.rgba[1] + ', ' + color.rgba[2] + ', ' + color.rgba[3] + ')');
+    mouseTrack('rgba(' + color.rgba[0] + ', ' + color.rgba[1] + ', ' + color.rgba[2] + ', ' + color.rgba[3] + ')');
+};
+
+//9. Create Mode for Erase 
+function erase() {
+    mouseTrack('transparent');
+}
+
+//Hover on Title
+function itsSketch(e) {
+    e.innerHTML = '<span style=\'font-size: 16px\'>it\'s a little sketch...</span>';
+}
+function itsEtch(e) {
+    e.innerHTML = '&#8226; &#8226; Etch &#8226; &#8226;';
 }
